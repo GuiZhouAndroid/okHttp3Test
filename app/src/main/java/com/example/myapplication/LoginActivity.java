@@ -27,41 +27,45 @@ import okhttp3.Call;
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private EditText username,password;
+    private EditText username, password;
     private Button login;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username =findViewById(R.id.username);
-        password =findViewById(R.id.password);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
 
-        login =findViewById(R.id.login);
+        login = findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String strUsername =username.getText().toString().trim();
-                String strPassword =password.getText().toString().trim();
-                String url ="https://www.lpssfxy.work/api/user/doLogin";
-                OkHttpUtils.post().url(url).addParams("username", strUsername).addParams("password", strPassword)
+                String strUsername = username.getText().toString().trim();
+                String strPassword = password.getText().toString().trim();
+
+                OkHttpUtils.post().url(Constant.LOGIN_USERNAME_PASSWORD).addParams("ulUsername", strUsername).addParams("ulPassword", strPassword)
                         .build()
                         .execute(new StringCallback() {
                             @Override
                             public void onError(Call call, Exception e, int id) {
 
                             }
+
                             @Override
                             public void onResponse(String response, int id) {
                                 try {
                                     JSONObject jsonObject1 = new JSONObject(response);
-                                    Log.i(TAG, "转Json===++: "+jsonObject1);
-                                    if (jsonObject1.optString("msg").equals("登录成功")){
+                                    Log.i(TAG, "转Json===++: " + jsonObject1);
+                                    if (jsonObject1.optString("code").equals("200")) {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                login.setText(response);
+                                                login.setText(jsonObject1.optString("data"));
                                             }
                                         });
+                                    } else if (jsonObject1.optString("code").equals("401")){
+                                        login.setText(jsonObject1.optString("data"));
                                     }else {
                                         Toast.makeText(LoginActivity.this, "用户名或密码不正确！", Toast.LENGTH_SHORT).show();
                                     }
@@ -72,6 +76,5 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
-
     }
 }

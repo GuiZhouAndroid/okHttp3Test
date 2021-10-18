@@ -30,7 +30,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-
         cookie = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(cookie)

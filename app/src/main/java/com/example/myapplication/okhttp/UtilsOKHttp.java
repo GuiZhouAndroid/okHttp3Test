@@ -32,7 +32,7 @@ import okhttp3.Response;
 
 /**
  * created by on 2021/9/20
- * 描述：
+ * 描述：封装Cookie持久化+OkHttp3的工具类
  *
  * @author ZSAndroid
  * @create 2021-09-20-12:15
